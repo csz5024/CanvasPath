@@ -2,7 +2,7 @@
 import hashlib
 from flask import Flask, render_template, request, redirect, url_for, flash
 import sqlite3 as sql
-from login import LoginForm, PwReset, addclass
+from login import LoginForm, PwReset, addclass, addFact
 from parse import ParseStudent, ParseHWgrades, ParseProfTID, ParseExamgrades, ParseExams, ParseProfessor, ParseDept, ParseCourse, ParseSection, ParseHW, ParseEnrolls
 import math
 
@@ -27,11 +27,13 @@ def login():
         pw = form.password.data
         if valid_login(user, pw) == 1:
             flash('Username/Password Successfully found in Database!', 'Success')
-            #redirect(url_for('Landing'))
             usr.set_user(user)
             return redirect(url_for('Landing'))
-            #return Landing()
-            #return render_template('Landing.html', url=host, form=form)
+        #faculty login
+        elif valid_login(user, pw) == 4:
+            flash('Username/Password Successfully found in DB!', 'Success')
+            usr.set_user(user)
+            return redirect(url_for("faculty"))
         elif valid_login(user, pw) == 2:
             flash('Error: Incorrect password', 'Error')
             redirect(url_for('login'))
@@ -52,7 +54,6 @@ def login():
 def Landing():
     getCourses = query_courses(usr.get_user())
     getGrades, avg1, avg2 = query_grades(usr.get_user())
-    print(getGrades)
     name = query_name(usr.get_user())
     email, age, gender, major = query_personal(usr.get_user())
     street, city, state, zip = query_Addr(usr.get_user())
@@ -87,6 +88,49 @@ def Reset():
             flash('Error: Username not found', 'Error')
             redirect(url_for('Reset'))
     return render_template('pwreset.html', url=host, form=form)
+
+
+@app.route('/faculty', methods=['GET', 'POST'])
+def Faculty():
+    #form = addFact(request.form)
+
+    # form = addclass(request.form)
+    # if request.method == 'POST' and form.validate():
+    #     course = form.course_id.data
+    #     name = form.course_name.data
+    #     desc = form.course_desc.data
+    #
+    #     course_id2 = form.course_id2.data
+    #     prof_email = form.prof_email.data
+    #
+    #     course_id3 = form.course_id3.data
+    #     sec_no = form.sec_no.data
+    #     stud_email = form.stud_email.data
+    #
+    #     # print(course_id3, sec_no, stud_email)
+    #     if (course != "") and (name != "") and (desc != ""):
+    #         if addcourse(course, name, desc) == 1:
+    #             flash('Course successfully added', 'Success')
+    #         else:
+    #             flash('Unable to add course', 'Error')
+    #             redirect(url_for('Admin'))
+    #     # intrinsically makes sure that all professor entries must be assigned to a course
+    #     if (course_id2 != "") and (prof_email != ""):
+    #         if addteacher(course_id2, prof_email) == 1:
+    #             flash('Professor successfully added', 'Success')
+    #         else:
+    #             flash('Unable to add course', 'Error')
+    #             redirect(url_for('Admin'))
+    #     if (course_id3 != "") and (stud_email != "") and (sec_no != ""):
+    #         if addstud(course_id3, sec_no, stud_email) == 1:
+    #             flash('Student successfully added', 'Success')
+    #         elif addstud(course_id3, sec_no, stud_email) == 0:
+    #             flash('Class is full! try a different section', 'Error')
+    #         else:
+    #             flash('Unable to add course', 'Error')
+    #             redirect(url_for('Admin'))
+
+    return render_template(url_for("Faculty.html"), url=host)
 
 
 @app.route('/Admin', methods=['GET', 'POST'])
@@ -302,7 +346,6 @@ def query_grades(username):
     cur.execute('SELECT student_email se, course_id c, exam_no e, grade g FROM Exam_grades E WHERE se=? GROUP BY se, c;',(username,))
     conn.commit()
     exam = cur.fetchall()
-    print(homework, exam)
     send=[]
     for i in exam:
         classn = i[1]
@@ -317,9 +360,7 @@ def query_grades(username):
                 conn.commit()
                 minmax = cur.fetchall()
                 minmax=minmax[0]
-                #print(minmax)
                 minmax=(math.floor(minmax[2]*100)/100, minmax[3], minmax[4])
-                #print(minmax)
                 element = j + (minmax, number, grade)
                 cur.execute('SELECT course_id c, exam_no h, AVG(grade), MIN(grade), MAX(grade) '
                             'FROM Exam_grades '
@@ -327,9 +368,7 @@ def query_grades(username):
                             'GROUP BY h', (classn, number,))
                 conn.commit()
                 minmax2 = cur.fetchall()
-                print(minmax2)
                 minmax2 = minmax2[0]
-                # print(minmax2)
                 minmax2 = (math.floor(minmax2[2] * 100) / 100, minmax2[3], minmax2[4])
                 element = element + (minmax2,)
         send.append(element)
@@ -426,10 +465,6 @@ def valid_login(username, password):
     conn.commit()
     db = cur.fetchone()
 
-    cur.execute('SELECT email, password FROM Professors WHERE email=?', (username,))
-    conn.commit()
-    db2 = cur.fetchone()
-
     tell = username.split("@")
 
     #encrypt user entered password
@@ -440,7 +475,7 @@ def valid_login(username, password):
     if tell[0] == 'admin':
         return 3
     # student
-    elif len(tell[0]) > 3:
+    elif len(tell[0]) > 4:
         # user/pass not found in database
         if db is None:
             cur.close()
@@ -456,15 +491,24 @@ def valid_login(username, password):
             return 2
     #faculty
     else:
+        cur.close()
+        conn.close()
+        print(username)
+        conn = sql.connect('database.db')
+        cur = conn.cursor()
+        cur.execute('SELECT email e2, password p2 FROM Professors WHERE e2=?', (username,))
+        conn.commit()
+        db = cur.fetchone()
+        print(db)
         # user/pass not found in database
-        if db2 is None:
+        if db is None:
             cur.close()
             conn.close()
             return 0
-        elif password == db2[1]:
+        elif password == db[1]:
             cur.close()
             conn.close()
-            return 1
+            return 4
         else:
             cur.close()
             conn.close()

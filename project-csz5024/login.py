@@ -21,4 +21,6 @@ class addclass(Form):
     sec_no = StringField('Section No', [validators.Length(min=0, max=5)])
     stud_email = StringField('Student Email', [validators.Length(min=5, max=100)])
 
-
+class addFact(Form):
+    username = StringField('Username', [validators.Length(min=5, max=10)])
+    password = PasswordField('Password', [validators.data_required()])

@@ -38,7 +38,10 @@
 						<div class="container">
 							{% from "formhelpers.html" import render_field %}
 							<form method="POST" action="">
-								<h3>Add a Course to Database</h3>
+
+								<hr />
+
+								<h2>Add a Course to Database</h2>
 								<div class="form-group">
 									{{render_field(form.course_id, class_="form-control")}}
 								</div>
@@ -52,7 +55,9 @@
 									<p><input type="submit" value="Add Course"></p>
 								</div>
 
-								<h3>Assign a Professor to a Course</h3>
+								<hr />
+
+								<h2>Assign a Professor to a Course</h2>
 								<div class="form-group">
 									{{render_field(form.course_id2, class_="form-control")}}
 								</div>
@@ -63,7 +68,9 @@
 									<p><input type="submit" value="Add Professor"></p>
 								</div>
 
-								<h3>Enroll a Student in a class</h3>
+								<hr />
+
+								<h2>Enroll a Student in a class</h2>
 								<div class="form-group">
 									{{render_field(form.course_id3, class_="form-control")}}
 								</div>
@@ -74,7 +81,7 @@
 									{{render_field(form.stud_email, class_="form-control")}}
 								</div>
 								<div class="submitbtn">
-									<p><input type="submit" value="Add Course"></p>
+									<p><input type="submit" value="Enroll Student"></p>
 								</div>
 
 							</form>
