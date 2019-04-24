@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<!--
+	Spatial by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+	<head>
+		<title>Dashboard - CanvasPath by Casey Zduniak</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="static/css/main.css" />
+	</head>
+	<body>
+
+		<!-- Header -->
+			<header id="header">
+				<h1><strong><a href="index.html">CanvasPath</a></strong> by Casey Zduniak</h1>
+				<nav id="nav">
+					<ul>
+						<!--<li><a href="landing.html">Dashboard</a></li>-->
+						<li><a href="/">Logout</a></li>
+					</ul>
+				</nav>
+			</header>
+
+			<a href="#menu" class="navPanelToggle"><span class="fa fa-bars"></span></a>
+
+		<!-- Main -->
+			<section id="main" class="wrapper">
+				<div class="container">
+					<header class="major special">
+						<h2>Administrator</h2>
+						<p>Welcome</p>
+					</header>
+
+					<section id="add" class="wrapper">
+						<div class="container">
+							{% from "formhelpers.html" import render_field %}
+							<form method="POST" action="">
+								<h3>Add a Course to Database</h3>
+								<div class="form-group">
+									{{render_field(form.course_id, class_="form-control")}}
+								</div>
+								<div class="form-group">
+									{{render_field(form.course_name, class_="form-control")}}
+								</div>
+								<div class="form-group">
+									{{render_field(form.course_desc, class_="form-control")}}
+								</div>
+								<div class="submitbtn">
+									<p><input type="submit" value="Add Course"></p>
+								</div>
+
+								<h3>Assign a Professor to a Course</h3>
+								<div class="form-group">
+									{{render_field(form.course_id2, class_="form-control")}}
+								</div>
+								<div class="form-group">
+									{{render_field(form.prof_email, class_="form-control")}}
+								</div>
+								<div class="submitbtn">
+									<p><input type="submit" value="Add Professor"></p>
+								</div>
+
+								<h3>Enroll a Student in a class</h3>
+								<div class="form-group">
+									{{render_field(form.course_id3, class_="form-control")}}
+								</div>
+								<div class="form-group">
+									{{render_field(form.sec_no, class_="form-control")}}
+								</div>
+								<div class="form-group">
+									{{render_field(form.stud_email, class_="form-control")}}
+								</div>
+								<div class="submitbtn">
+									<p><input type="submit" value="Add Course"></p>
+								</div>
+
+							</form>
+							{% include 'messages.html' %}
+						</div>
+					</section>
+
+					<hr />
+
+				</div>
+			</section>
+
+		<!-- Footer -->
+			<footer id="footer">
+				<div class="container">
+					<ul class="icons">
+						<li><a href="#" class="icon fa-facebook"></a></li>
+						<li><a href="#" class="icon fa-twitter"></a></li>
+						<li><a href="#" class="icon fa-instagram"></a></li>
+					</ul>
+					<ul class="copyright">
+						<li>&copy; Untitled</li>
+						<li>Design: <a href="http://templated.co">TEMPLATED</a></li>
+						<li>Images: <a href="http://unsplash.com">Unsplash</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="static/js/jquery.min.js"></script>
+			<script src="static/js/skel.min.js"></script>
+			<script src="static/js/util.js"></script>
+			<script src="static/js/main.js"></script>

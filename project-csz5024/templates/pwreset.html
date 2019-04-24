@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>CanvasPath</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="static/css/main.css"/>
+</head>
+<body>
+
+<section id="main" class="wrapper">
+    <div class="container">
+        {% from "formhelpers.html" import render_field %}
+        <form method="POST" action="">
+            <div class="form-group">
+                {{render_field(form.user, class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{render_field(form.old, class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{render_field(form.new, class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{render_field(form.confirm, class_="form-control")}}
+            </div>
+            <div class="submitbtn">
+                <p><input type="submit" value="Update Password"></p>
+            </div>
+        </form>
+        {% include 'messages.html' %}
+    </div>
+</section>
+</body>
+</html>
