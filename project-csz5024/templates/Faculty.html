@@ -34,17 +34,17 @@
 						<h2>{{ name }}</h2>
 						<p>Welcome</p>
 						{% from "formhelpers.html" import render_field %}
-						<form method="POST" action="">
-							<div class="form-group">
-								{{render_field(form.username, class_="form-control")}}
-							</div>
-							<div class="form-group">
-								{{render_field(form.password, class_="form-control")}}
-							</div>
-							<div class="submitbtn">
-								<p><input type="submit" value="Login"></p>
-							</div>
-						</form>
+						<!--<form method="POST" action="">-->
+							<!--<div class="form-group">-->
+								<!--{{render_field(form.username, class_="form-control")}}-->
+							<!--</div>-->
+							<!--<div class="form-group">-->
+								<!--{{render_field(form.password, class_="form-control")}}-->
+							<!--</div>-->
+							<!--<div class="submitbtn">-->
+								<!--<p><input type="submit" value="Login"></p>-->
+							<!--</div>-->
+						<!--</form>-->
 						{% include 'messages.html' %}
 					</header>
 

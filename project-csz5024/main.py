@@ -33,7 +33,7 @@ def login():
         elif valid_login(user, pw) == 4:
             flash('Username/Password Successfully found in DB!', 'Success')
             usr.set_user(user)
-            return redirect(url_for("faculty"))
+            return redirect(url_for("Faculty"))
         elif valid_login(user, pw) == 2:
             flash('Error: Incorrect password', 'Error')
             redirect(url_for('login'))
@@ -90,9 +90,9 @@ def Reset():
     return render_template('pwreset.html', url=host, form=form)
 
 
-@app.route('/faculty', methods=['GET', 'POST'])
+@app.route('/Faculty', methods=['GET', 'POST'])
 def Faculty():
-    #form = addFact(request.form)
+    form = addFact(request.form)
     name = query_name(usr.get_user())
     # form = addclass(request.form)
     # if request.method == 'POST' and form.validate():
@@ -130,7 +130,7 @@ def Faculty():
     #             flash('Unable to add course', 'Error')
     #             redirect(url_for('Admin'))
 
-    return render_template(url_for("Faculty.html"), url=host, name=name)
+    return render_template("Faculty.html", url=host, form=form, name=name)
 
 
 @app.route('/Admin', methods=['GET', 'POST'])
@@ -336,10 +336,16 @@ def query_Addr(username):
 def query_name(username):
     conn = sql.connect('database.db')
     cur = conn.cursor()
-    cur.execute('SELECT name n FROM Students S WHERE email=?',(username,))
+    sert = username.split('@')
+    if len(sert[0]) < 4:
+        cur.execute('SELECT name n FROM Professors P WHERE email=?',(username,))
+    else:
+        cur.execute('SELECT name n FROM Students S WHERE email=?',(username,))
     conn.commit()
-    name = cur.fetchone()[0]
-    name = name.strip()
+    name = cur.fetchone()
+    if name is not None:
+        name = name[0]
+        name = name.strip()
     return name
 
 
@@ -499,13 +505,11 @@ def valid_login(username, password):
     else:
         cur.close()
         conn.close()
-        print(username)
         conn = sql.connect('database.db')
         cur = conn.cursor()
         cur.execute('SELECT email e2, password p2 FROM Professors WHERE e2=?', (username,))
         conn.commit()
         db = cur.fetchone()
-        print(db)
         # user/pass not found in database
         if db is None:
             cur.close()
