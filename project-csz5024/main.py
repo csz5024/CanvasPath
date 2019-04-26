@@ -93,7 +93,7 @@ def Reset():
 @app.route('/faculty', methods=['GET', 'POST'])
 def Faculty():
     #form = addFact(request.form)
-
+    name = query_name(usr.get_user())
     # form = addclass(request.form)
     # if request.method == 'POST' and form.validate():
     #     course = form.course_id.data
@@ -130,12 +130,15 @@ def Faculty():
     #             flash('Unable to add course', 'Error')
     #             redirect(url_for('Admin'))
 
-    return render_template(url_for("Faculty.html"), url=host)
+    return render_template(url_for("Faculty.html"), url=host, name=name)
 
 
 @app.route('/Admin', methods=['GET', 'POST'])
 def Admin():
     form = addclass(request.form)
+    # print("check")
+    # print(form.validate())
+    # flash(form.errors)
     if request.method == 'POST' and form.validate():
         course = form.course_id.data
         name = form.course_name.data
@@ -148,6 +151,8 @@ def Admin():
         sec_no = form.sec_no.data
         stud_email = form.stud_email.data
 
+        # print(course, name, desc)
+        # print(course_id2, prof_email)
         # print(course_id3, sec_no, stud_email)
         if (course != "") and (name != "") and (desc != ""):
             if addcourse(course, name, desc) == 1:
@@ -170,6 +175,7 @@ def Admin():
             else:
                 flash('Unable to add course', 'Error')
                 redirect(url_for('Admin'))
+
 
     return render_template("Admin.html", url=host, form=form)
 
